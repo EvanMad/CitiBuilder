@@ -102,6 +102,8 @@ GameStateLoadGame::GameStateLoadGame(Game* game)
 	auto grid = tgui::Grid::create();
 	grid->setSize({ "50%", "100%" });
 	//grid->setAutoSize(true);
+	//auto layout = tgui::VerticalLayout::create();
+	//layout->setSize("100%", "100%");
 
 	tgui::ScrollablePanel::Ptr scrollZone = tgui::ScrollablePanel::create();
 	scrollZone->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
@@ -118,18 +120,20 @@ GameStateLoadGame::GameStateLoadGame(Game* game)
 		//btn->setSize(768, 64);
 		//btn-> setPosition({ "100%", "50%" });
 		//btn->setSize({ "200%", "20" });
-		btn->setSize("parent.width*2", 67);
+		btn->setSize("parent.width", 67);
+		btn->setPosition(0, i * 67);
 		//btn->setSize("(parent.size.x)*2, 67");
 		//btn->setSize(scrollZone->getContentSize().x, 64);
 		//btn->setPosition({ "50%", "50%" });
 		btn->onClick(&GameStateLoadGame::LoadGame, this, std::string(btn->getText()));
-		grid->addWidget(btn, i, 0);
+		scrollZone->add(btn);
+		//grid->addWidget(btn, i, 0);
 		i++;
 	}
 
-	grid->setHeight(67 * i);
+	//grid->setHeight(67 * i);
 
-	scrollZone->add(grid);
+	//scrollZone->add(layout);
 	this->game->gui.add(scrollZone);
 	//game->gui.add(world_name_label, "World Name Label");
 }

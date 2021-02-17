@@ -78,7 +78,7 @@ void dump()
 void GameStateNewGame::GenerateWorld(tgui::EditBox::Ptr box, tgui::EditBox::Ptr seedbox, tgui::Slider::Ptr freq)
 {
 	GameStateEditor* gse = new GameStateEditor(this->game);
-	
+	float ahh = freq->getValue();
 	unsigned int seed = seedbox->getText().toUInt();
 	gse->city.RandomCity(seed, (freq->getValue()));
 	gse->city.map = Map("maps/randomworld.dat", 32, 32, game->tileAtlas);
