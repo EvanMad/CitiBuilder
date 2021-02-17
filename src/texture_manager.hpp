@@ -11,7 +11,7 @@ private:
 
 public:
 	void loadTexture(const std::string& name, const std::string& filename);
-
+	void LoadTextureFromMemory(void* input, int size, std::string& name);
 	sf::Texture& getRef(const std::string& texture);
 
 	TextureManager()

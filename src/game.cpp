@@ -119,9 +119,15 @@ void Game::loadTextures()
 	texmgr.loadTexture("cursor", "res/cursor.png");
 }
 
-
+#include "tile_manager.hpp"
 void Game::loadTiles()
 {
+	
+	TileManager tiler;
+	this->tileAtlas = tiler.loadTiles(texmgr);
+	Animation staticAnim(0, 0, 1.0f);
+
+	/*
 	std::cout << "test" << std::endl;
 	Animation staticAnim(0, 0, 1.0f);
 	this->tileAtlas["grass"] = Tile(this->tileSize, 1, texmgr.getRef("grass"), { staticAnim }, TileType::GRASS, 50, 0, 1);
@@ -177,7 +183,6 @@ void Game::loadTiles()
 			TileType::ROAD, 100, 0, 1);
 	this->tileAtlas["woodfence"] = woodfence;
 
-
 	Tile wheat = Tile(this->tileSize, 1, texmgr.getRef("wheat"), { staticAnim }, TileType::WHEAT, 50, 0, 1);
 	this->tileAtlas["wheat"] = wheat;
 
@@ -187,24 +192,26 @@ void Game::loadTiles()
 	this->tileAtlas["tree"] = Tile(this->tileSize, 2, texmgr.getRef("tree"), { staticAnim }, TileType::TREE, 50, 0, 1);
 	this->tileAtlas["dirt"] = Tile(this->tileSize, 1, texmgr.getRef("dirt"), { staticAnim }, TileType::DIRT, 50, 0, 1);
 	this->tileAtlas["sand"] = Tile(this->tileSize, 1, texmgr.getRef("sand"), { staticAnim }, TileType::SAND, 50, 0, 1);
-
+	*/
 	//Various Commercial Densities
-	this->tileAtlas["commercial_high_density"] =  Tile(this->tileSize, 2, texmgr.getRef("commercial_high_density"), { staticAnim }, TileType::COMMERCIAL_HIGH_DENSITY, 50, 0, 1);
-	this->tileAtlas["commercial_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("commercial_medium_density"), { staticAnim }, TileType::COMMERCIAL_MEDIUM_DENSITY, 50, 0, 1);
-	this->tileAtlas["commercial_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("commercial_low_density"), { staticAnim }, TileType::COMMERCIAL_LOW_DENSITY, 50, 0, 1);
+	//this->tileAtlas["commercial_high_density"] =  Tile(this->tileSize, 2, texmgr.getRef("commercial_high_density"), { staticAnim }, TileType::COMMERCIAL_HIGH_DENSITY, 50, 0, 1);
+	//this->tileAtlas["commercial_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("commercial_medium_density"), { staticAnim }, TileType::COMMERCIAL_MEDIUM_DENSITY, 50, 0, 1);
+	//this->tileAtlas["commercial_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("commercial_low_density"), { staticAnim }, TileType::COMMERCIAL_LOW_DENSITY, 50, 0, 1);
 
 	//Various Industrial Densities
-	this->tileAtlas["industrial_high_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_high_density"), { staticAnim }, TileType::INDUSTRIAL_HIGH_DENSITY, 50, 0, 1);
-	this->tileAtlas["industrial_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_medium_density"), { staticAnim }, TileType::INDUSTRIAL_MEDIUM_DENSITY, 50, 0, 1);
-	this->tileAtlas["industrial_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_low_density"), { staticAnim }, TileType::INDUSTRIAL_LOW_DENSITY, 50, 0, 1);
+	//this->tileAtlas["industrial_high_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_high_density"), { staticAnim }, TileType::INDUSTRIAL_HIGH_DENSITY, 50, 0, 1);
+	//this->tileAtlas["industrial_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_medium_density"), { staticAnim }, TileType::INDUSTRIAL_MEDIUM_DENSITY, 50, 0, 1);
+	//this->tileAtlas["industrial_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("industrial_low_density"), { staticAnim }, TileType::INDUSTRIAL_LOW_DENSITY, 50, 0, 1);
 
 	//Various Residential Densities
-	this->tileAtlas["residential_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_low_density"), { staticAnim }, TileType::RESIDENTIAL_LOW_DENSITY, 50, 0, 1);
-	this->tileAtlas["residential_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_medium_density"), { staticAnim }, TileType::RESIDENTIAL_MEDIUM_DENSITY, 50, 0, 1);
-	this->tileAtlas["residential_high_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_high_density"), { staticAnim }, TileType::RESIDENTIAL_HIGH_DENSITY, 50, 0, 1);
-	this->tileAtlas["residential_towers"] = Tile(this->tileSize, 2, texmgr.getRef("residential_towers"), { staticAnim }, TileType::RESIDENTIAL_TOWERS, 50, 0, 1);
-	this->tileAtlas["residential_skyscrapers"] = Tile(this->tileSize, 2, texmgr.getRef("residential_skyscrapers"), { staticAnim }, TileType::RESIDENTIAL_SKYSCRAPERS, 50, 0, 1);
-	this->tileAtlas["residential_skyscrapers_huge"] = Tile(this->tileSize, 4, texmgr.getRef("residential_skyscrapers_huge"), { staticAnim }, TileType::RESIDENTIAL_SKYSCRAPERS_HUGE, 50, 0, 1);
+	//this->tileAtlas["residential_low_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_low_density"), { staticAnim }, TileType::RESIDENTIAL_LOW_DENSITY, 50, 0, 1);
+	//this->tileAtlas["residential_medium_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_medium_density"), { staticAnim }, TileType::RESIDENTIAL_MEDIUM_DENSITY, 50, 0, 1);
+	//this->tileAtlas["residential_high_density"] = Tile(this->tileSize, 2, texmgr.getRef("residential_high_density"), { staticAnim }, TileType::RESIDENTIAL_HIGH_DENSITY, 50, 0, 1);
+	//this->tileAtlas["residential_towers"] = Tile(this->tileSize, 2, texmgr.getRef("residential_towers"), { staticAnim }, TileType::RESIDENTIAL_TOWERS, 50, 0, 1);
+	//this->tileAtlas["residential_skyscrapers"] = Tile(this->tileSize, 2, texmgr.getRef("residential_skyscrapers"), { staticAnim }, TileType::RESIDENTIAL_SKYSCRAPERS, 50, 0, 1);
+	//this->tileAtlas["residential_skyscrapers_huge"] = Tile(this->tileSize, 4, texmgr.getRef("residential_skyscrapers_huge"), { staticAnim }, TileType::RESIDENTIAL_SKYSCRAPERS_HUGE, 50, 0, 1);
+
+	//this->tileAtlas["ahhh"] = Tile(this->tileSize, 1, texmgr.getRef("ahhh"), { staticAnim }, TileType::WHEAT, 50, 0, 1);
 }
 
 void Game::loadFonts()

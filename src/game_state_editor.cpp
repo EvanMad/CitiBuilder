@@ -381,6 +381,7 @@ GameStateEditor::GameStateEditor(Game* game)
 			std::make_pair("Tree $" + this->game->tileAtlas["tree"].getCost(), "tree"),
 
 			std::make_pair("Dirt $" + this->game->tileAtlas["dirt"].getCost(), "dirt"),
+			std::make_pair("AHHH $" + this->game->tileAtlas["ahhh2"].getCost(), "ahhh2"),
 		std::make_pair("Sand $" + this->game->tileAtlas["dirt"].getCost(), "sand"),
 		}
 	));
