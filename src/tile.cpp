@@ -25,42 +25,5 @@ int random(int min, int max) //range : [min, max]
 
 void Tile::update()
 {
-	/* If the population is at the maximum value for the tile,
-	 * there is a small chance that the tile will increase its
-	 * building stage */
-	if ((this->tileType == TileType::RESIDENTIAL ||
-		this->tileType == TileType::COMMERCIAL ||
-		this->tileType == TileType::INDUSTRIAL) &&
-		this->population == this->maxPopPerLevel * (double(this->tileVariant) + 1) &&
-		this->tileVariant < this->maxLevels)
-	{
-		++this->tileVariant;
-		//if (rand() % int(1e4) < 1e2 / (double(this->tileVariant) + 1)) ++this->tileVariant;
-		std::cout << (random(0, 10) > 5) << std::endl;
-		if (random(0, 10) > 5) ++this->tileVariant;
-	}
-
-	if ((this->tileType == TileType::RESIDENTIAL ||
-		this->tileType == TileType::COMMERCIAL ||
-		this->tileType == TileType::INDUSTRIAL))
-	{
-		++this->tileVariant;
-	}
-
 	return;
-}
-
-std::string tileTypeToStr(TileType type)
-{
-	switch (type)
-	{
-	default:
-	case TileType::VOID:             return "Void";
-	case TileType::GRASS:            return "Flatten";
-	case TileType::FOREST:		     return "Forest";
-	case TileType::WATER:            return "Water";
-	case TileType::RESIDENTIAL:      return "Redsidential Zone";
-	case TileType::COMMERCIAL:       return "Commercial Zome";
-	case TileType::INDUSTRIAL:       return "Industrial Zome";
-	}
 }

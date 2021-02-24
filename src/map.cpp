@@ -6,55 +6,25 @@
 
 #include "map.hpp"
 #include "tile.hpp"
+#include "game.hpp"
 
-void Map::load(const std::string& filename, unsigned int width, unsigned int height, std::map<std::string, Tile>& tileAtlas)
+void Map::load(const std::string& filename, unsigned int width, unsigned int height, std::vector<Tile>& tileAtlas)
 {
 	std::fstream inputFile;
 	inputFile.open(filename, std::ios::in | std::ios::binary);
 	this->width = width;
 	this->height = height;
+	int dump;
+	inputFile.read((char*)&dump, sizeof(int));
 	for (int pos = 0; pos < this->width * this->height; ++pos)
 	{
 		this->resources.push_back(255);
 		this->selected.push_back(0);
-		TileType tileType;
+		int tileType;
 		inputFile.read((char*)&tileType, sizeof(int));
-		switch(tileType)
-		{
-		default:
-		case TileType::VOID:
-		case TileType::GRASS:
-			this->tiles.push_back(tileAtlas.at("grass"));
-			break;
-		case TileType::FOREST:
-			this->tiles.push_back(tileAtlas.at("forest"));
-			break;
-		case TileType::WATER:
-			this->tiles.push_back(tileAtlas.at("water"));
-			break;
-			/*
-		case TileType::RESIDENTIAL:
-			this->tiles.push_back(tileAtlas.at("residential"));
-			break;
-		case TileType::COMMERCIAL:
-			this->tiles.push_back(tileAtlas.at("commerical"));
-			break;
-		case TileType::INDUSTRIAL:
-			this->tiles.push_back(tileAtlas.at("industrial"));
-			break;
-			*/
-		case TileType::ROAD:
-			this->tiles.push_back(tileAtlas.at("road"));
-			break;
 
-		case TileType::RESIDENTIAL_HIGH_DENSITY: this->tiles.push_back(tileAtlas.at("residential_high_density")); break;
-		case TileType::RESIDENTIAL_MEDIUM_DENSITY: this->tiles.push_back(tileAtlas.at("residential_medium_density")); break;
-		case TileType::RESIDENTIAL_LOW_DENSITY: this->tiles.push_back(tileAtlas.at("residential_low_density")); break;
-		case TileType::RESIDENTIAL_TOWERS: this->tiles.push_back(tileAtlas.at("residential_low_density")); break;
-		case TileType::RESIDENTIAL_SKYSCRAPERS: this->tiles.push_back(tileAtlas.at("residential_low_density")); break;
-		case TileType::RESIDENTIAL_SKYSCRAPERS_HUGE: this->tiles.push_back(tileAtlas.at("residential_low_density")); break;
+		this->tiles.push_back(tileAtlas[tileType]);
 
-		}
 		Tile& tile = this->tiles.back();
 		inputFile.read((char*)&tile.tileVariant, sizeof(int));
 		inputFile.read((char*)&tile.regions, sizeof(int));
@@ -65,43 +35,24 @@ void Map::load(const std::string& filename, unsigned int width, unsigned int hei
 	return;
 }
 
-void Map::LoadFromCitiFile(std::vector<TileSaveStruct> file, unsigned int width, unsigned int height, std::map<std::string, Tile>& tileAtlas){
+void Map::LoadFromMemory(std::vector<unsigned char> data, unsigned int width, unsigned int height)
+{
+
+}
+
+void Map::LoadFromCitiFile(std::vector<TileSaveStruct> file, unsigned int width, unsigned int height, std::vector<Tile>& tileAtlas){
 	this->width = width;
 	this->height = height;
-
-	std::map<TileType, std::string> tiletest;
-	tiletest.emplace(TileType::GRASS, "grass");
-	tiletest.emplace(TileType::FOREST, "forest");
-	tiletest.emplace(TileType::WATER, "water");
-	tiletest.emplace(TileType::RESIDENTIAL_HIGH_DENSITY, "residential_high_density");
-	tiletest.emplace(TileType::RESIDENTIAL_MEDIUM_DENSITY, "residential_medium_density");
-	tiletest.emplace(TileType::RESIDENTIAL_LOW_DENSITY, "residential_low_density");
-	tiletest.emplace(TileType::RESIDENTIAL_TOWERS, "residential_towers");
-	tiletest.emplace(TileType::RESIDENTIAL_SKYSCRAPERS, "residential_skyscrapers");
-	tiletest.emplace(TileType::RESIDENTIAL_SKYSCRAPERS_HUGE, "residential_skyscrapers_huge");
-
-	tiletest.emplace(TileType::COMMERCIAL_HIGH_DENSITY, "commercial_high_density");
-	tiletest.emplace(TileType::COMMERCIAL_MEDIUM_DENSITY, "commercial_medium_density");
-	tiletest.emplace(TileType::COMMERCIAL_LOW_DENSITY, "commercial_low_density");
-
-	tiletest.emplace(TileType::INDUSTRIAL_HIGH_DENSITY, "industrial_high_density");
-	tiletest.emplace(TileType::INDUSTRIAL_MEDIUM_DENSITY, "industrial_medium_density");
-	tiletest.emplace(TileType::INDUSTRIAL_LOW_DENSITY, "industrial_low_density");
-
-	tiletest.emplace(TileType::SAND, "sand");
-	tiletest.emplace(TileType::DIRT, "dirt");
-	tiletest.emplace(TileType::WHEAT, "wheat");
-	tiletest.emplace(TileType::ROAD, "road");
-	tiletest.emplace(TileType::TREE, "tree");
 
 	for (int pos = 0; pos < this->width * this->height; ++pos)
 	{
 		this->resources.push_back(255);
 		this->selected.push_back(0);
-		TileType tileType;
-		tileType = (TileType)file[pos].tiletype;
+		int tileType;
+		//tileType = (TileType)file[pos].tiletype;
+		tileType = file[pos].tiletype;
 
-		this->tiles.push_back(tileAtlas.at(tiletest.at(tileType)));
+		this->tiles.push_back(tileAtlas[tileType]);
 
 		Tile& tile = this->tiles.back();
 		tile.tileVariant = file[pos].tileVariant;
@@ -112,7 +63,7 @@ void Map::LoadFromCitiFile(std::vector<TileSaveStruct> file, unsigned int width,
 	return;
 }
 
-std::vector<int> Map::save(const std::string& filename)
+std::vector<int> Map::save()
 {
 	//std::ofstream outputFile;
 	//outputFile.open(filename, std::ios::out | std::ios::binary);
@@ -155,7 +106,7 @@ void Map::draw(sf::RenderWindow& window, float dt)
 	return;
 }
 
-void Map::updateDirection(TileType tileType)
+void Map::updateDirection(int tileType)
 {
 	for (int y = 0; y < this->height; ++y)
 	{
@@ -166,13 +117,18 @@ void Map::updateDirection(TileType tileType)
 			if (this->tiles[pos].tileType != tileType) continue;
 
 			bool adjacentTiles[3][3] = { {0,0,0},{0,0,0},{0,0,0} };
+			std::vector<Tile> adjacentTilesArray;
 
 			/* Check for adjacent tiles of the same type */
+			// I removed some code here that adds to this vector, basically I just was playing around with the tile borders idea (like beaches connecting to water) but never put too much thought to it
 			if (x > 0 && y > 0)
+				//adjacentTilesArray.push_back(this->tiles[(y - 1) * this->width + (x - 1)]);
 				adjacentTiles[0][0] = (this->tiles[(y - 1) * this->width + (x - 1)].tileType == tileType);
 			if (y > 0)
+				//adjacentTilesArray.push_back(this->tiles[(y - 1) * this->width + (x - 1)]);
 				adjacentTiles[0][1] = (this->tiles[(y - 1) * this->width + (x)].tileType == tileType);
 			if (x < this->width - 1 && y > 0)
+				//adjacentTilesArray.push_back(this->tiles[(y - 1) * this->width + (x + 1)]);
 				adjacentTiles[0][2] = (this->tiles[(y - 1) * this->width + (x + 1)].tileType == tileType);
 			if (x > 0)
 				adjacentTiles[1][0] = (this->tiles[(y)*this->width + (x - 1)].tileType == tileType);
@@ -184,6 +140,11 @@ void Map::updateDirection(TileType tileType)
 				adjacentTiles[2][1] = (this->tiles[(y + 1) * this->width + (x)].tileType == tileType);
 			if (x < this->width - 1 && y < this->height - 1)
 				adjacentTiles[2][2] = (this->tiles[(y + 1) * this->width + (x + 1)].tileType == tileType);
+
+			for (auto tile : adjacentTilesArray)
+			{
+				std::cout << tile.tileType << std::endl;
+			}
 
 			/* Change the tile variant depending on the tile position */
 			if (adjacentTiles[1][0] && adjacentTiles[1][2] && adjacentTiles[0][1] && adjacentTiles[2][1])
@@ -222,7 +183,7 @@ void Map::updateDirection(TileType tileType)
 	return;
 }
 
-void Map::depthfirstsearch(std::vector<TileType>& whitelist, sf::Vector2i pos, int label, int regionType = 0)
+void Map::depthfirstsearch(std::vector<int>& whitelist, sf::Vector2i pos, int label, int regionType = 0)
 {
 	if (pos.x < 0 || pos.x >= this->width) return;
 	if (pos.y < 0 || pos.y >= this->height) return;
@@ -247,7 +208,7 @@ void Map::depthfirstsearch(std::vector<TileType>& whitelist, sf::Vector2i pos, i
 	return;
 }
 
-void Map::findConnectedRegions(std::vector<TileType> whitelist, int regionType = 0)
+void Map::findConnectedRegions(std::vector<int> whitelist, int regionType = 0)
 {
 	int regions = 1;
 	for (auto& tile : this->tiles) tile.regions[regionType] = 0;
@@ -285,7 +246,7 @@ void Map::clearSelected()
 	return;
 }
 
-void Map::select(sf::Vector2i start, sf::Vector2i end, std::vector<TileType> blacklist)
+void Map::select(sf::Vector2i start, sf::Vector2i end, std::vector<int> blacklist)
 {
 	/* Swap coordinates if necessary */
 	if (end.y < start.y) std::swap(start.y, end.y);

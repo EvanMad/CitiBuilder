@@ -80,11 +80,11 @@ void GameStateNewGame::GenerateWorld(tgui::EditBox::Ptr box, tgui::EditBox::Ptr 
 	GameStateEditor* gse = new GameStateEditor(this->game);
 	float ahh = freq->getValue();
 	unsigned int seed = seedbox->getText().toUInt();
-	gse->city.RandomCity(seed, (freq->getValue()));
-	gse->city.map = Map("maps/randomworld.dat", 32, 32, game->tileAtlas);
+	gse->city.RandomCity(seed, (freq->getValue()), game->tileAtlas);
+	//gse->city.map = Map("maps/randomworld.dat", 32, 32, game->tileAtlas);
 	std::string worldname = std::string(box->getText());
 	gse->city.name = worldname;
-	gse->city.save(worldname);
+	//gse->city.save(worldname);
 	gse->city.shuffleTiles();
 	this->game->pushState(gse);
 }

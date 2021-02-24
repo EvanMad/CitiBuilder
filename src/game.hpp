@@ -27,9 +27,11 @@ public:
 	sf::RenderWindow window;
 
 	TextureManager texmgr;
+	std::vector<sf::Texture> icons;
 	sf::Sprite background;
 
-	std::map<std::string, Tile> tileAtlas;
+	std::vector<Tile> tileAtlas;
+	//std::map<std::string, Tile> tileAtlas;
 	std::map<std::string, GuiStyle> stylesheets;
 	std::map<std::string, sf::Font> fonts;
 

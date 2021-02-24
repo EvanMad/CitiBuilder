@@ -46,22 +46,9 @@ void City::bulldoze(const Tile& tile)
 		int test = this->map.selected[pos];
 		if (this->map.selected[pos] != 0)
 		{
-			if (this->map.tiles[pos].tileType == TileType::RESIDENTIAL)
-			{
-				this->populationPool += this->map.tiles[pos].population;
-			}
-			else if (this->map.tiles[pos].tileType == TileType::COMMERCIAL)
-			{
-				this->employmentPool += this->map.tiles[pos].population;
-			}
-			else if (this->map.tiles[pos].tileType == TileType::INDUSTRIAL)
-			{
-				this->employmentPool += this->map.tiles[pos].population;
-			}
 			this->map.tiles[pos] = tile;
 		}
 	}
-
 	return;
 }
 
@@ -80,14 +67,16 @@ void City::shuffleTiles()
 
 void City::tileChanged()
 {
-	this->map.updateDirection(TileType::ROAD);
+	this->map.updateDirection(17);
+	this->map.updateDirection(18);
 	this->map.findConnectedRegions({
-		TileType::ROAD, TileType::RESIDENTIAL, TileType::COMMERCIAL, TileType::INDUSTRIAL
+		17,
+		18,
 		}, 0);
 	return;
 }
 
-void City::load(std::string cityName, std::map<std::string, Tile>& tileAtlas)
+void City::load(std::string cityName, std::vector<Tile>& tileAtlas)
 {
 	int width = 0;
 	int height = 0;
@@ -158,11 +147,18 @@ void City::save(std::string cityName)
 
 	outputFile.write(reinterpret_cast<char*>(&city_out), sizeof(city_out));
 	
-	std::vector<int> test = this->map.save("test.map");
+	std::vector<int> test = this->map.save();
 	for (auto tile : test)
 	{
 		outputFile.write(reinterpret_cast<char*>(&tile), sizeof(int));
 	}
+
+	std::cout << "Save" << std::endl;
+
+	//outputFile.open("saves/debug.AHHH", std::ios::out | std::ios::binary);
+	//outputFile << "Test";
+	//outputFile.close();
+
 	outputFile.close();
 
 	return;
@@ -186,7 +182,7 @@ void City::update(float dt)
 	return;
 }
 
-void City::RandomCity(int seed, float freq)
+void City::RandomCity(int seed, float freq, std::vector<Tile>& tileAtlas)
 {
 	FastNoiseLite noise;
 	noise.SetSeed(seed);
@@ -195,9 +191,10 @@ void City::RandomCity(int seed, float freq)
 	float noiseData[32][32];
 	int index = 0;
 
-	std::ofstream outputFile;
-	outputFile.open("maps/randomworld.dat", std::ios::out | std::ios::binary);
+	//std::ofstream outputFile;
+	//outputFile.open("maps/randomworld.dat", std::ios::out | std::ios::binary);
 
+	std::vector<TileSaveStruct> tileStructs;
 	for (int y = 0; y < 32; y++)
 	{
 		for (int x = 0; x < 32; x++)
@@ -208,14 +205,18 @@ void City::RandomCity(int seed, float freq)
 			tile.population = 0;
 			tile.storedGoods = 0;
 			noiseData[x][y] = noise.GetNoise((float)x, (float)y);
-			if(noiseData[x][y] > 0.5) { tile.tiletype = 1; }
-			else if (noiseData[x][y] > 0) { tile.tiletype = 2; }
-			else if (noiseData[x][y] < 0) { tile.tiletype = 3; }
-			else if (noiseData[x][y] < -0.5) { tile.tiletype = 4; }
-			outputFile.write(reinterpret_cast<char*>(&tile), sizeof(tile));
+			if(noiseData[x][y] > 0.5) { tile.tiletype = 16; }
+			else if (noiseData[x][y] > 0) { tile.tiletype = 14; }
+			else if (noiseData[x][y] < 0) { tile.tiletype = 21; }
+			else if (noiseData[x][y] < -0.5) { tile.tiletype = 16; }
+			else { tile.tiletype = 16; }
+			tileStructs.push_back(tile);
+
+			//outputFile.write(reinterpret_cast<char*>(&tile), sizeof(tile));
 		}
 	}
-	outputFile.close();
+	this->map.LoadFromCitiFile(tileStructs, 32, 32, tileAtlas);
+	//outputFile.close();
 	//delete[] noiseData;
 }
 

@@ -10,6 +10,8 @@
 #include "tile.hpp"
 #include <iostream>
 #include <TGUI/TGUI.hpp>
+#include <filesystem>
+#include "util.hpp"
 
 void Game::pushState(GameState* state)
 {
@@ -81,6 +83,8 @@ Game::~Game()
 void Game::loadTextures()
 {
 	texmgr.loadTexture("background", "res/background2.png");
+
+	/*
 	texmgr.loadTexture("grass", "res/grass.png");
 	texmgr.loadTexture("forest", "res/forest.png");
 	texmgr.loadTexture("water", "res/water.png");
@@ -117,6 +121,7 @@ void Game::loadTextures()
 	texmgr.loadTexture("commercial_high_density", "res/commercial/commercial_high_density.png");
 
 	texmgr.loadTexture("cursor", "res/cursor.png");
+	*/
 }
 
 #include "tile_manager.hpp"
@@ -124,7 +129,7 @@ void Game::loadTiles()
 {
 	
 	TileManager tiler;
-	this->tileAtlas = tiler.loadTiles(texmgr);
+	this->tileAtlas = tiler.loadTiles(texmgr, this->icons);
 	Animation staticAnim(0, 0, 1.0f);
 
 	/*
@@ -217,7 +222,7 @@ void Game::loadTiles()
 void Game::loadFonts()
 {
 	sf::Font font;
-	font.loadFromFile("res/RobotoCondensed-Regular.ttf");
+	font.loadFromFile("content/fonts/rct2.ttf");
 	this->fonts["main_font"] = font;
 	return;
 }

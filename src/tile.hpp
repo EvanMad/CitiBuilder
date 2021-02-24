@@ -7,46 +7,12 @@
 #include "animation_handler.hpp"
 
 
-enum class TileType {
-	VOID,
-	GRASS,
-	FOREST,
-	WATER,
-	RESIDENTIAL,
-	COMMERCIAL,
-	INDUSTRIAL,
-	ROAD,
-	RAIL,
-	WHEAT,
-	DEEPWATER,
-	DIRT,
-	SAND,
-
-	RESIDENTIAL_HIGH_DENSITY,
-	RESIDENTIAL_MEDIUM_DENSITY,
-	RESIDENTIAL_LOW_DENSITY,
-	RESIDENTIAL_TOWERS,
-	RESIDENTIAL_SKYSCRAPERS,
-	RESIDENTIAL_SKYSCRAPERS_HUGE,
-
-	COMMERCIAL_HIGH_DENSITY,
-	COMMERCIAL_MEDIUM_DENSITY,
-	COMMERCIAL_LOW_DENSITY,
-
-	INDUSTRIAL_HIGH_DENSITY,
-	INDUSTRIAL_MEDIUM_DENSITY,
-	INDUSTRIAL_LOW_DENSITY,
-	TREE,
-};
-
-std::string tileTypeToStr(TileType type);
-
 class Tile
 {
 public:
 	AnimationHandler animHandler;
 	sf::Sprite sprite;
-	TileType tileType;
+	int tileType;
 	int tileVariant;
 	unsigned int regions[1];
 	unsigned int cost;
@@ -61,7 +27,7 @@ public:
 		const unsigned int height,
 		sf::Texture& texture,
 		const std::vector<Animation>& animations,
-		const TileType tileType,
+		const int tileType,
 		const unsigned int cost,
 		const unsigned int maxPopPerLevel,
 		const unsigned int maxLevels)

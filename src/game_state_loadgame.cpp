@@ -6,6 +6,7 @@
 #include "game_state_loadgame.hpp"
 #include <iostream>
 #include <filesystem>
+#include "util.hpp"
 
 void GameStateLoadGame::draw(const float dt)
 {
@@ -79,7 +80,7 @@ void GameStateLoadGame::LoadGame(std::string world)
 	//gse->city.shuffleTiles();
 	gse->city.load(world, game->tileAtlas);
 	gse->city.shuffleTiles();
-	gse->city.name = world;
+	gse->city.name = remove_extension(base_name(world));
 	this->game->pushState(gse);
 }
 

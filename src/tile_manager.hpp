@@ -12,6 +12,8 @@ public:
 	int tiletype;
 	int texSize;
 	std::vector<unsigned char> tex;
+	int iconSize;
+	std::vector<unsigned char> icon;
 	int animCount;
 	TileFile();
 };
@@ -21,8 +23,8 @@ class TileManager
 private:
 	const static int tileSize = 8;
 public:
-	std::map<std::string, Tile> loadTiles(TextureManager& texmgr);
+	std::vector<Tile> loadTiles(TextureManager& texmgr, std::vector<sf::Texture>& icons);
 	void loadTextures();
-	std::map<std::string, Tile> tileAtlas;
+	std::vector<Tile> tileAtlas;
 	TextureManager texmgr;
 };

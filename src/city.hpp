@@ -75,13 +75,13 @@ public:
 		this->day = 0;
 	}
 
-	City(std::string cityName, int tileSize, std::map<std::string, Tile>& tileAtlas) : City()
+	City(std::string cityName, int tileSize, std::vector<Tile>& tileAtlas) : City()
 	{
 		this->map.tileSize = tileSize;
 		load(cityName, tileAtlas);
 	}
 
-	void load(std::string cityName, std::map<std::string, Tile>& tileAtlas);
+	void load(std::string cityName, std::vector<Tile>& tileAtlas);
 	void save(std::string cityName);
 	void update(float dt);
 	void bulldoze(const Tile& tile);
@@ -89,7 +89,7 @@ public:
 	void tileChanged();
 	double getHomeless() { return this->populationPool; }
 	double getUnemployed() { return this->employmentPool; }
-	void RandomCity(int seed, float freq);
+	void RandomCity(int seed, float freq, std::vector<Tile>& tileAtlas);
 };
 
 #endif // CITY_HPP

@@ -6,6 +6,7 @@
 #include "game_state.hpp"
 #include "map.hpp"
 #include "city.hpp"
+#include <vector>
 
 enum class ActionState{NONE, PANNING, SELECTING, BRUSH};
 enum class ClickAction{SELECT, BRUSH};
@@ -24,10 +25,16 @@ private:
 
     sf::Vector2i selectionStart;
     sf::Vector2i selectionEnd;
-    void closeAllSubMenus();
     Tile* currentTile;
+    std::vector<Tile> validTiles;
+    void SelectTile(int tile);
+    void OpenCloseMenu();
 public:
     City city;
+    tgui::Panel::Ptr panel;
+    tgui::ScrollablePanel::Ptr scrollZone;
+    //tgui::Panel::Ptr backpanel;
+    tgui::ChildWindow::Ptr backpanel;
     virtual void draw(const float dt);
     virtual void update(const float dt);
     virtual void handleInput();

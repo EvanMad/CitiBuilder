@@ -8,31 +8,22 @@
 #include <TGUI/TGUI.hpp>
 #include <fstream>
 #include "game.hpp"
-
-std::string base_name(std::string const& path)
-{
-	return path.substr(path.find_last_of("/\\") + 1);
-}
-
-std::string remove_extension(const std::string& filename) {
-	size_t lastdot = filename.find_last_of(".");
-	if (lastdot == std::string::npos) return filename;
-	return filename.substr(0, lastdot);
-}
-
-inline bool ends_with(std::string const& value, std::string const& ending)
-{
-	if (ending.size() > value.size()) return false;
-	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
+#include "util.hpp"
 
 void TileManager::loadTextures()
 {
 }
 
-std::map<std::string, Tile> TileManager::loadTiles(TextureManager& texmgr)
+bool compareTile(const Tile* lhs, const Tile* rhs)
 {
+	return lhs->tileType < rhs->tileType;
+}
+
+std::vector<Tile> TileManager::loadTiles(TextureManager& texmgr, std::vector<sf::Texture>& icons)
+{
+	auto localIcons = &icons;
+	tileAtlas.resize(256);
+	icons.resize(256);
 	Animation staticAnim(0, 0, 1.0f);
 	for (const auto& entry : std::filesystem::directory_iterator("content/tiles"))
 	{
@@ -57,6 +48,12 @@ std::map<std::string, Tile> TileManager::loadTiles(TextureManager& texmgr)
 			//inputFile.read((char*)&dump, sizeof(char));
 			//inputFile.read((char*)&dump, sizeof(char));
 
+			inputFile.read((char*)&tile.iconSize, sizeof(int));
+			tile.icon.resize(tile.iconSize);
+			inputFile.read((char*)&dump, sizeof(char));
+			inputFile.read((char*)tile.icon.data(), tile.iconSize - 1);
+			tile;
+
 			//temp anim sutff
 			std::vector<Animation> anims;
 			//anims.resize(tile.animCount);
@@ -72,22 +69,31 @@ std::map<std::string, Tile> TileManager::loadTiles(TextureManager& texmgr)
 				inputFile.read((char*)&duration, sizeof(float));
 				anims.push_back(Animation(startFrame, endFrame, duration));
 			}
-			tile;
 
 			//texmgr = TextureManager();
 			sf::Texture tex;
 			sf::Image img;
-			void* data = (tile.tex.data());
-			auto data2 = (&tile.tex);
+			void* texdata = (tile.tex.data());
 			std::string baseName = remove_extension(base_name(std::string(fileName)));
-			//tex.loadFromMemory(data, tile.texSize);
-			//bool check = tex.loadFromMemory(data, size_t(tile.texSize));
-			//check;
-			texmgr.LoadTextureFromMemory(data, tile.tex.size(), baseName);
-			this->tileAtlas[baseName] = Tile(this->tileSize, tile.height, texmgr.getRef(baseName), anims, static_cast<TileType>(tile.tiletype), 50, 0, 1);
+			std::string iconName = baseName + "_icon";
+			void* iconData = (tile.icon.data());
+			texmgr.LoadTextureFromMemory(texdata, tile.tex.size(), baseName);
+			texmgr.LoadTextureFromMemory(iconData, tile.icon.size(), iconName);
+			//this->tileAtlas.push_back(Tile(this->tileSize, tile.height, texmgr.getRef(baseName), anims, (tile.tiletype), 50, 0, 1));
+			this->tileAtlas[tile.tiletype] = Tile(this->tileSize, tile.height, texmgr.getRef(baseName), anims, (tile.tiletype), 50, 0, 1);
+			icons[tile.tiletype] = texmgr.getRef(iconName);
+			//this->tileAtlas.insert(Tile(this->tileSize, tile.height, texmgr.getRef(baseName), anims, (tile.tiletype), 50, 0, 1), 0);
+
+			//auto itPos = this->tileAtlas.begin() + tile.tiletype;
+			//auto place = this->tileAtlas.insert(itPos, Tile(this->tileSize, tile.height, texmgr.getRef(baseName), anims, (tile.tiletype), 50, 0, 1));
+
 			inputFile.close();
 		}
 	}
+	//std::sort(this->tileAtlas.begin(), this->tileAtlas.end(), [](const Tile& lhs, const Tile& rhs) {
+		//return lhs.tileType < rhs.tileType;
+		//});
+	//std::sort(&tileAtlas.begin(), &tileAtlas.end(), compareTile);
 	return this->tileAtlas;
 }
 
